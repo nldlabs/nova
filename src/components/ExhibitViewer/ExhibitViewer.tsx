@@ -53,6 +53,8 @@ export function ExhibitViewer({ exhibitId, quality, parameters, onMetadataLoaded
           powerPreference: 'high-performance',
         }}
         dpr={quality === 'low' ? 1 : quality === 'medium' ? 1.5 : window.devicePixelRatio}
+        style={{ touchAction: 'none' }}
+        eventPrefix="client"
       >
         <Suspense fallback={null}>
           <Component 
