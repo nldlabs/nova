@@ -4,14 +4,29 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
+html, body {
+  position: fixed;
   width: 100%;
   height: 100%;
-  height: 100dvh; /* Dynamic viewport height - accounts for iOS browser chrome */
   overflow: hidden;
   background: #000;
   color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  /* iOS safe areas */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 /* Hide scrollbars but allow scrolling */
@@ -22,12 +37,6 @@ html, body, #root {
 /* Selection color */
 ::selection {
   background: rgba(100, 200, 255, 0.3);
-}
-
-/* Smooth font rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Base link styles */
@@ -42,25 +51,8 @@ canvas {
   touch-action: none;
 }
 
-/* Prevent pull-to-refresh and overscroll on mobile */
-html {
-  overscroll-behavior: none;
-}
-
-body {
-  overscroll-behavior: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
 /* Prevent text selection on UI elements */
 button, nav, header {
   user-select: none;
   -webkit-user-select: none;
-}
-
-/* Fix for iOS height issues */
-@supports (-webkit-touch-callout: none) {
-  html, body, #root {
-    height: -webkit-fill-available;
-  }
 }

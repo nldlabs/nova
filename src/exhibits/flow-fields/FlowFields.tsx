@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { ExhibitProps } from '../types';
@@ -8,10 +8,33 @@ import vertexShader from './shader.vert?raw';
 
 export function FlowFields({ isActive, parameters }: ExhibitProps) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const { size, pointer, viewport } = useThree();
+  const { size, pointer, viewport, gl } = useThree();
   
   // Track smooth mouse for ethereal lag
   const smoothMouse = useRef(new THREE.Vector2(0.5, 0.5));
+  const touchPos = useRef(new THREE.Vector2(0.5, 0.5));
+
+  // Handle touch events manually for iOS
+  useEffect(() => {
+    const canvas = gl.domElement;
+    
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        touchPos.current.x = (touch.clientX - rect.left) / rect.width;
+        touchPos.current.y = 1 - (touch.clientY - rect.top) / rect.height;
+      }
+    };
+    
+    canvas.addEventListener('touchstart', handleTouch, { passive: true });
+    canvas.addEventListener('touchmove', handleTouch, { passive: true });
+    
+    return () => {
+      canvas.removeEventListener('touchstart', handleTouch);
+      canvas.removeEventListener('touchmove', handleTouch);
+    };
+  }, [gl]);
 
   const uniforms = useMemo(() => ({
     u_time: { value: 0 },
@@ -34,9 +57,20 @@ export function FlowFields({ isActive, parameters }: ExhibitProps) {
       size.height * (window.devicePixelRatio || 1)
     );
     
+    // Use pointer for mouse, touchPos for touch (iOS)
+    // Check if pointer has moved from origin (0,0) - if not, use touch
+    const isTouchDevice = 'ontouchstart' in window;
+    let targetX: number, targetY: number;
+    
+    if (isTouchDevice) {
+      targetX = touchPos.current.x;
+      targetY = touchPos.current.y;
+    } else {
+      targetX = (pointer.x + 1) / 2;
+      targetY = (pointer.y + 1) / 2;
+    }
+    
     // Very slow, ethereal mouse follow
-    const targetX = (pointer.x + 1) / 2;
-    const targetY = (pointer.y + 1) / 2;
     smoothMouse.current.x += (targetX - smoothMouse.current.x) * 0.008;
     smoothMouse.current.y += (targetY - smoothMouse.current.y) * 0.008;
     uniforms.u_mouse.value.copy(smoothMouse.current);
