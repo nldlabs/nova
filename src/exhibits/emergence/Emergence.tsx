@@ -22,6 +22,7 @@ export function Emergence({ isActive, parameters }: ExhibitProps) {
     u_cohesion: { value: parameters.cohesion ?? 1.0 },
     u_trailLength: { value: parameters.trailLength ?? 0.5 },
     u_colorShift: { value: parameters.colorShift ?? 0.0 },
+    u_size: { value: parameters.size ?? 0.5 },
   }), []);
 
   useFrame((state) => {
@@ -48,6 +49,7 @@ export function Emergence({ isActive, parameters }: ExhibitProps) {
     uniforms.u_cohesion.value = parameters.cohesion ?? 1.0;
     uniforms.u_trailLength.value = parameters.trailLength ?? 0.5;
     uniforms.u_colorShift.value = parameters.colorShift ?? 0.0;
+    uniforms.u_size.value = parameters.size ?? 0.5;
   });
 
   return (

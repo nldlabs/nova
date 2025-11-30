@@ -2,6 +2,8 @@
 
 An interactive gallery of GPU-accelerated generative art exhibits featuring WebGL shaders authored by cutting-edge AI.
 
+**[✦ Experience NOVA Live](https://nova.nldlabs.cloud)**
+
 ## The Experiment
 
 **What happens when you give state-of-the-art AI direct access to the GPU?**

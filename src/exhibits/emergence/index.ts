@@ -14,6 +14,15 @@ const exhibitModule: ExhibitModule = {
 
   controls: [
     {
+      key: 'size',
+      label: 'Size',
+      type: 'slider',
+      defaultValue: 0.5,
+      min: 0.0,
+      max: 1.0,
+      step: 0.05,
+    },
+    {
       key: 'population',
       label: 'Population',
       type: 'slider',
